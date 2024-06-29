@@ -3,13 +3,12 @@ from tkinter import messagebox, filedialog
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import subprocess
-import platform
 
 # Function to save patient info and command output to PDF
 def save_to_pdf(patient_info, file_column1, file_column2, command_output):
     file_name = f"{patient_info['name'].replace(' ', '_')}.pdf"
     c = canvas.Canvas(file_name, pagesize=letter)
-    c.drawString(100, 750, f"Patient Information")
+    c.drawString(100, 750, "Patient Information")
     c.drawString(100, 730, f"Name: {patient_info['name']}")
     c.drawString(100, 710, f"Age: {patient_info['age']}")
     c.drawString(100, 690, f"Gender: {patient_info['gender']}")
@@ -17,17 +16,17 @@ def save_to_pdf(patient_info, file_column1, file_column2, command_output):
     c.drawString(100, 650, f"Location: {patient_info['location']}")
 
     y = 630
-    c.drawString(100, y, f"Attached File (Column 1):")
+    c.drawString(100, y, "Attached File (Column 1):")
     y -= 20
     c.drawString(100, y, file_column1)
 
     y -= 40
-    c.drawString(100, y, f"Attached File (Column 2):")
+    c.drawString(100, y, "Attached File (Column 2):")
     y -= 20
     c.drawString(100, y, file_column2)
 
     y -= 40
-    c.drawString(100, y, f"Command Output:")
+    c.drawString(100, y, "Command Output:")
     y -= 20
     for line in command_output.splitlines():
         c.drawString(100, y, line)
@@ -57,15 +56,13 @@ def browse_file(entry):
 # Function to execute the classify-image.py script with the selected files
 def execute_script(patient_info, file_column1, file_column2):
     command = f"python3 classify-image.py \"{file_column1}\" \"{file_column2}\""
-    command_output = ""
-
     try:
         command_output = subprocess.check_output(command, shell=True, text=True)
+        messagebox.showinfo("Success", "Script executed successfully.")
     except subprocess.CalledProcessError as e:
+        command_output = e.output
         messagebox.showerror("Error", f"Script execution failed: {e.output}")
-        return
 
-    messagebox.showinfo("Success", "Script executed successfully.")
     save_to_pdf(patient_info, file_column1, file_column2, command_output)
 
 # Function to open the file attachment window
@@ -116,7 +113,7 @@ entry_location = tk.Entry(root, bg=entry_bg_color)
 entry_name.grid(row=0, column=1, pady=2, padx=5)
 entry_age.grid(row=1, column=1, pady=2, padx=5)
 entry_gender.grid(row=2, column=1, pady=2, padx=5)
-entry_contact.grid(row=3, column=1, pady=2, padx=5)
+entry_contact.grid(row=3, column=1, pady=2, padx5)
 entry_location.grid(row=4, column=1, pady=2, padx=5)
 
 # Create and place the next button with colors
