@@ -3,9 +3,10 @@ from tkinter import messagebox, filedialog
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import subprocess
+import platform
 
-# Function to save patient info to PDF
-def save_to_pdf(patient_info, file_column1, file_column2):
+# Function to save patient info and command output to PDF
+def save_to_pdf(patient_info, file_column1, file_column2, command_output):
     file_name = f"{patient_info['name'].replace(' ', '_')}.pdf"
     c = canvas.Canvas(file_name, pagesize=letter)
     c.drawString(100, 750, f"Patient Information")
@@ -24,6 +25,13 @@ def save_to_pdf(patient_info, file_column1, file_column2):
     c.drawString(100, y, f"Attached File (Column 2):")
     y -= 20
     c.drawString(100, y, file_column2)
+
+    y -= 40
+    c.drawString(100, y, f"Command Output:")
+    y -= 20
+    for line in command_output.splitlines():
+        c.drawString(100, y, line)
+        y -= 20
 
     c.save()
     messagebox.showinfo("Success", f"PDF saved as {file_name}")
@@ -47,13 +55,18 @@ def browse_file(entry):
     entry.insert(0, file_path)
 
 # Function to execute the classify-image.py script with the selected files
-def execute_script(file_column1, file_column2):
-    command = ["python", "classify-image.py", file_column1, file_column2]
+def execute_script(patient_info, file_column1, file_column2):
+    command = f"python3 classify-image.py \"{file_column1}\" \"{file_column2}\""
+    command_output = ""
+
     try:
-        subprocess.run(command, check=True)
-        messagebox.showinfo("Success", "Script executed successfully.")
+        command_output = subprocess.check_output(command, shell=True, text=True)
     except subprocess.CalledProcessError as e:
-        messagebox.showerror("Error", f"Script execution failed: {e}")
+        messagebox.showerror("Error", f"Script execution failed: {e.output}")
+        return
+
+    messagebox.showinfo("Success", "Script executed successfully.")
+    save_to_pdf(patient_info, file_column1, file_column2, command_output)
 
 # Function to open the file attachment window
 def open_file_attachment_window(patient_info):
@@ -62,18 +75,18 @@ def open_file_attachment_window(patient_info):
     file_window.configure(bg="#f0f0f0")
 
     tk.Label(file_window, text="ML Model", bg="#e0f7fa", fg="#00796b").grid(row=0, column=0, padx=10, pady=5)
-    tk.Label(file_window, text="Image File", bg="#e0f7fa", fg="#00796b").grid(row=0, column=1, padx=10, pady=5)
+    tk.Label(file_window, text="Image", bg="#e0f7fa", fg="#00796b").grid(row=0, column=1, padx=10, pady=5)
 
     entry1 = tk.Entry(file_window, bg="#ffffff", width=50)
     entry2 = tk.Entry(file_window, bg="#ffffff", width=50)
     entry1.grid(row=1, column=0, padx=10, pady=5)
     entry2.grid(row=1, column=1, padx=10, pady=5)
 
-    tk.Button(file_window, text="Add", command=lambda: browse_file(entry1), bg="#004d40", fg="#ffffff").grid(row=2, column=0, pady=10)
-    tk.Button(file_window, text="Add", command=lambda: browse_file(entry2), bg="#004d40", fg="#ffffff").grid(row=2, column=1, pady=10)
+    tk.Button(file_window, text="Upload", command=lambda: browse_file(entry1), bg="#004d40", fg="#ffffff").grid(row=2, column=0, pady=10)
+    tk.Button(file_window, text="Upload", command=lambda: browse_file(entry2), bg="#004d40", fg="#ffffff").grid(row=2, column=1, pady=10)
 
-    tk.Button(file_window, text="Save to PDF", command=lambda: save_to_pdf(patient_info, entry1.get(), entry2.get()), bg="#004d40", fg="#ffffff").grid(row=3, column=0, columnspan=2, pady=10)
-    tk.Button(file_window, text="Execute Script", command=lambda: execute_script(entry1.get(), entry2.get()), bg="#004d40", fg="#ffffff").grid(row=4, column=0, columnspan=2, pady=10)
+    tk.Button(file_window, text="Save to PDF", command=lambda: save_to_pdf(patient_info, entry1.get(), entry2.get(), ""), bg="#004d40", fg="#ffffff").grid(row=3, column=0, columnspan=2, pady=10)
+    tk.Button(file_window, text="Execute Script", command=lambda: execute_script(patient_info, entry1.get(), entry2.get()), bg="#004d40", fg="#ffffff").grid(row=4, column=0, columnspan=2, pady=10)
 
 # Create the main window
 root = tk.Tk()
