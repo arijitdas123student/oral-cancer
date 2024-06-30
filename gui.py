@@ -113,7 +113,7 @@ entry_location = tk.Entry(root, bg=entry_bg_color)
 entry_name.grid(row=0, column=1, pady=2, padx=5)
 entry_age.grid(row=1, column=1, pady=2, padx=5)
 entry_gender.grid(row=2, column=1, pady=2, padx=5)
-entry_contact.grid(row=3, column=1, pady=2, padx5)
+entry_contact.grid(row=3, column=1, pady=2, padx=5)
 entry_location.grid(row=4, column=1, pady=2, padx=5)
 
 # Create and place the next button with colors
