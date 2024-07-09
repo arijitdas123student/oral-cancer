@@ -21,7 +21,7 @@ def save_to_pdf(patient_info, file_column1, file_column2, file_column3, command_
     c.setLineWidth(2)
     c.rect(20, 20, width - 40, height - 40)  # Added a black border
 
-    c.drawString(100, 500, "Patient Information")
+    c.drawString(100, 500, "Oral Cancer")
     c.drawString(100, 480, f"Name: {patient_info['name']}")
     c.drawString(100, 460, f"Age: {patient_info['age']}")
     c.drawString(100, 440, f"Gender: {patient_info['gender']}")
@@ -29,22 +29,22 @@ def save_to_pdf(patient_info, file_column1, file_column2, file_column3, command_
     c.drawString(100, 400, f"Location: {patient_info['location']}")
 
     y = 380
-    c.drawString(100, y, "Attached File (Column 1):")
+    c.drawString(100, y, "Attached File (ML Model):")
     y -= 20
     c.drawString(100, y, file_column1)
 
     y -= 40
-    c.drawString(100, y, "Attached File (Column 2):")
+    c.drawString(100, y, "Attached File (Image):")
     y -= 20
     c.drawString(100, y, file_column2)
 
     y -= 40
-    c.drawString(100, y, "Clicked Picture (Column 3):")
+    c.drawString(100, y, "Clicked Picture (Image Clicked):")
     y -= 20
     c.drawString(100, y, file_column3)
 
     y -= 40
-    c.drawString(100, y, "Command Output:")
+    c.drawString(100, y, "Result:")
     y -= 20
     for line in command_output.splitlines():
         c.drawString(100, y, line)
@@ -147,7 +147,7 @@ def open_file_attachment_window(patient_info):
     tk.Button(file_window, text="Show Picture", command=show_picture, bg="#004d40", fg="#ffffff").grid(row=3, column=2, pady=10)
 
     tk.Button(file_window, text="Save to PDF", command=lambda: save_to_pdf(patient_info, entry1.get(), entry2.get(), entry3.get(), ""), bg="#004d40", fg="#ffffff").grid(row=4, column=0, columnspan=3, pady=10)
-    tk.Button(file_window, text="Execute Script", command=lambda: execute_script(patient_info, entry1.get(), entry2.get(), entry3.get()), bg="#004d40", fg="#ffffff").grid(row=5, column=0, columnspan=3, pady=10)
+    tk.Button(file_window, text="Generate Report", command=lambda: execute_script(patient_info, entry1.get(), entry2.get(), entry3.get()), bg="#004d40", fg="#ffffff").grid(row=5, column=0, columnspan=3, pady=10)
 
 # Create the main window
 root = tk.Tk()
