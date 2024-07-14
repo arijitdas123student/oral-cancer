@@ -73,7 +73,7 @@ def browse_file(entry):
 
 # Function to execute the classify-image.py script with the selected files
 def execute_script(patient_info, file_column1, file_column2, file_column3):
-    command = f"python3 classify-image.py \"{file_column1}\" \"{file_column2}\" \"{file_column3}\""
+    command = f"python3 classify-image.py \"{file_column1}\" \"{file_column2}\""
     try:
         command_output = subprocess.check_output(command, shell=True, text=True)
         messagebox.showinfo("Success", "Script executed successfully.")
